@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "signing-agent"
+version = "0.1.0"
+description = "A small local service that signs bytes with a PKCS#11 USB token or HSM, for e-invoicing and e-signature clients."
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Hamada Emam", email = "hamada.emam.tech@gmail.com" }]
+requires-python = ">=3.11"
+dependencies = [
+    "python-pkcs11>=0.10,<0.11",
+    "cryptography>=42",
+]
+keywords = ["pkcs11", "usb token", "hsm", "signing", "e-invoicing", "eta"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.11"]
+
+[project.scripts]
+signing-agent = "signing_agent.cli:main"
+
+[project.urls]
+Source = "https://github.com/hamada-emam-tech/signing-agent"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 160
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "UP", "SIM", "S"]
+ignore = ["S101", "S603", "S607"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S105", "S106", "S107"]
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true

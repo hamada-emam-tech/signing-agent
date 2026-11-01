@@ -1,0 +1,33 @@
+# signing-agent config. Copy to agent.toml and edit. agent.toml is git-ignored.
+# Secrets never go in this file: use *_env (an environment variable) or *_file (a file only
+# this user can read, chmod 600). With neither, the agent asks for them when it starts.
+
+[server]
+host = "127.0.0.1"          # loopback only. Any other address needs tls_cert and tls_key.
+port = 8765
+api_key_env = "SIGNING_AGENT_API_KEY"   # make one with: signing-agent new-api-key
+# api_key_file = "api.key"
+
+# Browser apps allowed to call the agent, exactly as the browser sends Origin.
+# Server-side callers (PHP, a queue worker) send no Origin and need only the API key.
+allowed_origins = []
+# allowed_origins = ["https://erp.example.com"]
+
+# Extra names this agent answers to in the Host header (loopback names are always allowed).
+# allowed_hosts = ["signer.office.lan"]
+
+# tls_cert = "agent-cert.pem"
+# tls_key = "agent-key.pem"
+
+[audit]
+path = "signing-agent-audit.log"
+
+# One section per token. The library is the PKCS#11 module from the token's vendor.
+[[token]]
+name = "main"               # used in certificate IDs: "main:<key id>"
+library = "/usr/lib/softhsm/libsofthsm2.so"
+# Windows: library = 'C:\Windows\System32\eps2003csp11.dll'
+label = "my token"          # the token label, or set serial instead
+# serial = "0123456789abcdef"
+pin_env = "SIGNING_AGENT_PIN"
+# pin_file = "token.pin"
